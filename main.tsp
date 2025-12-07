@@ -31,7 +31,7 @@ interface Widgets {
   /** List widgets */
   @get list(@query page?: uint16): WidgetList | Error;
   /** Read widgets */
-  @get read(@path id: string): Widget | Error;
+  @get read(@path id: string, @query foo?: boolean): Widget | Error;
   /** Create a widget */
   @post create(@body body: Widget): Widget | Error;
   /** Update a widget */
