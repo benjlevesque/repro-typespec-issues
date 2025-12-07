@@ -29,13 +29,16 @@ model AnalyzeResult {
 @tag("Widgets")
 interface Widgets {
   /** List widgets */
-  @get list(): WidgetList | Error;
+  @get list(@query page?: uint16): WidgetList | Error;
   /** Read widgets */
   @get read(@path id: string): Widget | Error;
   /** Create a widget */
   @post create(@body body: Widget): Widget | Error;
   /** Update a widget */
-  @patch update(@path id: string, @body body: MergePatchUpdate<Widget>): Widget | Error;
+  @patch update(
+    @path id: string,
+    @body body: MergePatchUpdate<Widget>,
+  ): Widget | Error;
   /** Delete a widget */
   @delete delete(@path id: string): void | Error;
 
