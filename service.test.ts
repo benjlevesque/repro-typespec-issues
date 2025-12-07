@@ -24,15 +24,20 @@ const defaultWidgetService: Widgets = {
 };
 
 describe("Bug reproduction", () => {
+  let server: http.Server;
   const createServer = async (widgetService: Widgets) => {
     const router = createDemoServiceRouter(widgetService);
-    const server = http.createServer(router.dispatch);
+    server = http.createServer(router.dispatch);
     await new Promise<void>((r) => server.listen(undefined, r));
     return {
       address: `http://localhost:${(server.address() as net.AddressInfo).port}`,
       close: () => server.close(),
     };
   };
+
+  after(() => {
+    server?.close();
+  });
 
   test("an optional numeric query parameter should be assignable to undefined", () => {
     const options: ListOptions = {};
@@ -55,7 +60,6 @@ describe("Bug reproduction", () => {
 
     // Act
     await fetch(`${server.address}/widgets`).then((r) => r.json());
-    server.close();
 
     // Assert
     assert(fn.mock.calls[0], "mock not called");
@@ -89,8 +93,6 @@ describe("Bug reproduction", () => {
 
     // Act
     await fetch(`${server.address}/widgets/1`).then((r) => r.json());
-
-    server.close();
 
     // Assert
     assert(fn.mock.calls[0], "mock not called");
