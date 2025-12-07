@@ -1,5 +1,6 @@
 emit:
   - "@typespec/openapi3"
+  - '@typespec/http-server-js'
 options:
   "@typespec/openapi3":
     emitter-output-dir: "{output-dir}/schema"
