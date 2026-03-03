@@ -1,4 +1,4 @@
-import { after, describe, mock, test } from "node:test";
+import { afterEach, describe, mock, test } from "node:test";
 import http from "node:http";
 import type net from "node:net";
 
@@ -23,7 +23,8 @@ const defaultWidgetService: Widgets = {
   update: notImplemented,
 };
 
-describe("Bug reproduction", () => {
+// Resolved : https://github.com/microsoft/typespec/issues/9156
+describe("Support for optional query params", () => {
   let server: http.Server;
   const createServer = async (widgetService: Widgets) => {
     const router = createDemoServiceRouter(widgetService);
@@ -31,13 +32,10 @@ describe("Bug reproduction", () => {
     await new Promise<void>((r) => server.listen(undefined, r));
     return {
       address: `http://localhost:${(server.address() as net.AddressInfo).port}`,
-      close: () => server.close(),
     };
   };
 
-  after(() => {
-    server?.close();
-  });
+  afterEach(() => server?.close());
 
   test("an optional numeric query parameter should be assignable to undefined", () => {
     const options: ListOptions = {};
